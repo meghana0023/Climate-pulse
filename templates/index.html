@@ -3,255 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Climate Pulse | Symmetrical Dashboard</title>
+    <title>Climate Pulse | Dashboard</title>
     <style>
-        :root {
-            --bg-storm: #0f172a;        /* Deep Midnight */
-            --panel-white: #ffffff;    /* High Contrast White */
-            --accent: #0284c7;          /* Professional Blue */
-            --text-dark: #1e293b;       /* Slate Dark Text */
-        }
-
-        body {
-            background-color: var(--bg-storm);
-            background-image: radial-gradient(at top left, #1e293b, #0f172a);
-            font-family: 'Inter', system-ui, sans-serif;
-            color: white;
-            margin: 0;
-            min-height: 100vh;
-        }
-
-        nav {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 1rem 5%;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo { font-weight: 800; color:white   ; letter-spacing: 1px; font-size: 1.2rem; }
-
-        /* --- Layout --- */
-        .main-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center; /* Vertical alignment */
-            gap: 40px;
-            padding: 60px 20px;
-            flex-wrap: wrap;
-        }
-
-        /* --- Symmetrical Card Design --- */
-        .card {
-            background: var(--panel-white);
-            color: var(--text-dark);
-            padding: 40px;
-            border-radius: 24px;
-            
-            /* Fixed Sizing to ensure both boxes are identical */
-            width: 400px;
-            height: 520px; 
-            
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .input-panel { border-top: 8px solid #cbd5e0; }
-
-        .output-panel {
-            border-top: 8px solid var(--accent);
-            /* Initially hidden with opacity for a smoother transition */
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .output-panel.visible {
-            visibility: visible;
-            opacity: 1;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); }
-            to { transform: translateY(0); }
-        }
-
-        h2 { 
-            margin-top: 0; 
-            font-size: 1rem; 
-            text-transform: uppercase; 
-            letter-spacing: 1.5px; 
-            color: #64748b;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        /* Form Elements */
-        label { display: block; font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 8px; }
-        
-        select, input {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            border: 2px solid #f1f5f9;
-            background: #f8fafc;
-            color: var(--text-dark);
-            font-weight: 500;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        .btn-analyze {
-            background: var(--text-dark);
-            color: white;
-            padding: 16px;
-            border-radius: 12px;
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: auto; /* Pushes button to bottom */
-            margin-bottom: 10px;
-        }
-        .btn-reset {
-            background: transparent;
-            color: #64748b;
-            border: 2px solid #e2e8f0;
-            padding: 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        /* Output Content */
-        .metric { margin: auto 0; text-align: center; }
-        .m-label { font-size: 0.8rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; display: block; }
-        .m-val { font-size: 3rem; font-weight: 900; color: var(--text-dark); line-height: 1; }
-        
-        .status-badge {
-            background: var(--text-dark);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-top: auto;
-        }
-        #loader-text {
-            display: none;
-            text-align: center;
-            color: var(--accent);
-            font-weight: 700;
-            margin-top: 10px;
-            font-size: 0.85rem;
-        }
+        :root { --bg: #0f172a; --panel: #ffffff; --accent: #0284c7; --text: #1e293b; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; color: white; margin: 0; }
+        nav { background: rgba(0,0,0,0.4); padding: 1rem 5%; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .main-wrapper { display: flex; justify-content: center; gap: 40px; padding: 60px 20px; flex-wrap: wrap; }
+        .card { background: var(--panel); color: var(--text); padding: 40px; border-radius: 24px; width: 400px; height: 520px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        .output-panel { visibility: hidden; opacity: 0; transition: 0.5s; border-top: 8px solid var(--accent); }
+        .output-panel.visible { visibility: visible; opacity: 1; }
+        h2 { font-size: 1rem; text-transform: uppercase; color: #64748b; text-align: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
+        input, select { width: 100%; padding: 14px; margin-bottom: 20px; border-radius: 12px; border: 2px solid #f1f5f9; background: #f8fafc; box-sizing: border-box; }
+        .btn-analyze { background: var(--text); color: white; padding: 16px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; margin-top: auto; }
+        .metric { text-align: center; margin: auto 0; }
+        .m-val { font-size: 3rem; font-weight: 900; }
+        .status-badge { background: var(--text); color: white; padding: 20px; border-radius: 15px; text-align: center; font-weight: 800; margin-top: auto; }
     </style>
 </head>
 <body>
-
-<nav><div class="logo">🌧 CLIMATE PULSE</div></nav>
-
-<div class="main-wrapper">
-    <div class="card input-panel">
-        <h2>Enter the input</h2>
-        
-        <label>Select the state</label>
-        <select id="state">
-            <option value="" disabled selected>Select State...</option>
-            {% for s in states %}
-            <option value="{{s}}">{{s}}</option>
-            {% endfor %}
-        </select>
-
-        <label>Prediction Year</label>
-        <input type="number" id="year" placeholder="YYYY">
-
-        <label>Month</label>
-        <input type="number" id="month" placeholder="1 - 12">
-
-        <button class="btn-analyze" id="run-btn" onclick="runPrediction()">Run Analysis</button>
-        <button class="btn-reset" onclick="location.reload()">Reset</button>
-        
-        <div id="loader-text">⚙ Processing Climate Models...</div>
-    </div>
-
-    <div class="card output-panel" id="out-panel">
-        <h2>Prediction Report</h2>
-        
-        <div class="metric">
-            <span class="m-label">Predicted Rainfall</span>
-            <div><span class="m-val" id="res-rain">0.0</span> <small style="color:#94a3b8">mm</small></div>
+    <nav><strong>🌧 CLIMATE PULSE</strong></nav>
+    <div class="main-wrapper">
+        <div class="card">
+            <h2>Input Parameters</h2>
+            <select id="state">
+                <option value="" disabled selected>Select State...</option>
+                {% for s in states %}<option value="{{s}}">{{s}}</option>{% endfor %}
+            </select>
+            <input type="number" id="year" placeholder="Year (YYYY)">
+            <input type="number" id="month" placeholder="Month (1-12)">
+            <button class="btn-analyze" id="run-btn" onclick="runPrediction()">Run Analysis</button>
+            <p id="loader" style="display:none; color: #0284c7; text-align: center;">⚙ Processing...</p>
         </div>
 
-        <div class="metric">
-            <span class="m-label">SPI-3 Index</span>
-            <span class="m-val" id="res-spi" style="font-size: 2.2rem;">0.0</span>
+        <div class="card output-panel" id="out-panel">
+            <h2>Prediction Report</h2>
+            <div class="metric">
+                <small>PREDICTED RAINFALL</small>
+                <div class="m-val"><span id="res-rain">0.0</span><small>mm</small></div>
+            </div>
+            <div class="metric">
+                <small>SPI-3 INDEX</small>
+                <div class="m-val" id="res-spi">0.0</div>
+            </div>
+            <div class="status-badge" id="res-status">--</div>
         </div>
-
-        <div class="status-badge" id="res-status">--</div>
     </div>
-</div>
 
-<script>
-function runPrediction() {
-    const btn = document.getElementById('run-btn');
-    const loader = document.getElementById('loader-text');
-    const panel = document.getElementById('out-panel');
+    <script>
+        async function runPrediction() {
+            const btn = document.getElementById('run-btn');
+            const data = {
+                state: document.getElementById('state').value,
+                year: document.getElementById('year').value,
+                month: document.getElementById('month').value
+            };
 
-    const data = {
-        state: document.getElementById('state').value,
-        year: document.getElementById('year').value,
-        month: document.getElementById('month').value
-    };
+            btn.disabled = true;
+            document.getElementById('loader').style.display = 'block';
 
-    if(!data.state || !data.year || !data.month) return alert("Please fill all fields.");
+            try {
+                const response = await fetch("/api/predict", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "X-API-KEY": "meghana_secret_2025" // MUST match .env
+                    },
+                    body: JSON.stringify(data)
+                });
 
-    // Enter loading state
-    btn.disabled = true;
-    btn.innerText = "Analyzing...";
-    loader.style.display = "block";
-    panel.classList.remove('visible'); // Hide previous results
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error);
 
-    fetch("/api/predict", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "X-API-KEY": "your_secret_passcode" // MUST match what's in your .env
-    },
-    body: JSON.stringify(data)
-})
-    .then(r => r.json())
-    .then(d => {
-        // Artificial 2-second delay for the "processing" feel
-        setTimeout(() => {
-            loader.style.display = "none";
-            btn.disabled = false;
-            btn.innerText = "Run Analysis";
-
-            // Fill and Show Output
-            document.getElementById('res-rain').innerText = d.rainfall;
-            document.getElementById('res-spi').innerText = d.spi;
-            
-            const badge = document.getElementById('res-status');
-            badge.innerText = d.status;
-
-            // Color the badge
-            const s = d.status.toLowerCase();
-            if(s.includes("flood")) badge.style.background = "#0284c7";
-            else if(s.includes("drought")) badge.style.background = "#ea580c";
-            else badge.style.background = "#059669";
-
-            panel.classList.add('visible');
-        }, 2000);
-    });
-}
-</script>
+                document.getElementById('res-rain').innerText = result.rainfall;
+                document.getElementById('res-spi').innerText = result.spi;
+                document.getElementById('res-status').innerText = result.status;
+                document.getElementById('out-panel').classList.add('visible');
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
