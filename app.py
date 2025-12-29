@@ -1,22 +1,17 @@
-from flask import Flask, render_template, request, jsonify
-from predict import predict_flood_drought, VALID_STATES
-import numpy as np
 import os
-from flask import Flask, request, jsonify, render_template
+import numpy as np
+from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 from functools import wraps
-app = Flask(__name__)
+from predict import predict_flood_drought, VALID_STATES
 
-# 1. Loading the variables from .env
+# 1. Load the variables from .env
 load_dotenv()
 SECRET_KEY = os.getenv("CLIMATE_API_KEY")
 
+app = Flask(__name__)
 
-
-@app.route("/")
-def home():
-    return render_template("index.html", states=VALID_STATES)
-
+# 2. Security Wrapper Function
 def require_api_key(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -27,14 +22,12 @@ def require_api_key(f):
         return jsonify({"error": "Unauthorized Access"}), 401
     return decorated
 
-@app.route("/api/predict", methods=["POST"])
-@require_api_key  # 3. Apply the security check
-def api_predict():
-    # Your prediction logic here...
-    return jsonify({"status": "Success"})
-
+@app.route("/")
+def home():
+    return render_template("index.html", states=VALID_STATES)
 
 @app.route("/api/predict", methods=["POST"])
+@require_api_key  # Apply the security check
 def api_predict():
     try:
         data = request.json
@@ -42,14 +35,14 @@ def api_predict():
         year = int(data.get("year"))
         month = int(data.get("month"))
 
-        # Passing all 3 parameters
+        # Passing all 3 parameters to your ML logic
         rain, spi, status = predict_flood_drought(state, year, month)
         
         # Handle NaN for JSON response
-        clean_spi = 0.0 if np.isnan(spi) else round(spi, 2)
+        clean_spi = 0.0 if np.isnan(spi) else round(float(spi), 2)
 
         return jsonify({
-            "rainfall": round(rain, 2),
+            "rainfall": round(float(rain), 2),
             "spi": clean_spi,
             "status": status
         })
